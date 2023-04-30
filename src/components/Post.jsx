@@ -4,8 +4,15 @@ import { Avatar } from './Avatar'
 
 import { formatDistanceToNow } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import { useState } from 'react'
 
 export function Post(props) {
+
+  const [comments, setComments] = useState([
+    'Post muito legal!',
+  ])
+
+  const [newCommentText, setNewCommentText] = useState('')
 
   const publishedDateFormatted = new Intl.DateTimeFormat('pt-br', {
     day: '2-digit',
@@ -18,6 +25,18 @@ export function Post(props) {
     locale: ptBR,
     addSuffix: true
   })
+
+  function handleCreateNewComment() {
+    event.preventDefault()
+    const newCommentText = event.target.comment.value
+
+    setComments([...comments, newCommentText])
+    setNewCommentText('')
+  }
+
+  function handleNewCommentChange() {
+    setNewCommentText(event.target.value)
+  }
 
   return (
     <article className={styles.post}>
@@ -46,7 +65,6 @@ export function Post(props) {
             return <p>{item.content}</p>
           } else if (item.type === 'link') {
             return <p><a href="#">{item.content}</a></p>
-
           }
         })}
 
@@ -57,11 +75,14 @@ export function Post(props) {
         </p>
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
         
         <textarea 
-          placeholder='Deixe um comentario'
+          name = "comment" 
+          placeholder = 'Deixe um comentario'
+          value = {newCommentText}
+          onChange = {handleNewCommentChange}
         />
 
         <footer>
@@ -70,7 +91,9 @@ export function Post(props) {
       </form>
 
       <div className={styles.commentList}>
-        <Comment/>
+        {comments.map (comment => {
+          return <Comment content={comment}/>
+        })}
       </div>
 
     </article>
