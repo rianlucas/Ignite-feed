@@ -46,6 +46,8 @@ export function Post(props) {
     setComments(commentsWithoutDeleteOne)
   }
 
+  const isNewCommentEmpty = newCommentText.length === 0
+
   return (
     <article className={styles.post}>
       <header>
@@ -94,7 +96,9 @@ export function Post(props) {
         />
 
         <footer>
-          <button type='submit'>Publicar</button>
+          <button type='submit' disabled={isNewCommentEmpty}>
+            Publicar
+          </button>
         </footer>
       </form>
 
